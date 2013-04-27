@@ -12,8 +12,7 @@ if (( ! $+commands[gpg-agent] )); then
   return 1
 fi
 
-# Make sure to use the $GNUPGHOME first.
-_gpg_env="${GNUPGHOME:-$HOME/.gnupg}/gpg-agent.env"
+_gpg_agent_info="$HOME/.gpg-agent-info"
 
 function _gpg-agent-start {
   local ssh_support
@@ -24,15 +23,15 @@ function _gpg-agent-start {
   gpg-agent \
     --daemon \
     ${ssh_support:+'--enable-ssh-support'} \
-    --write-env-file "${_gpg_env}" > /dev/null
+    --write-env-file "${_gpg_agent_info}" > /dev/null
 
-  chmod 600 "${_gpg_env}"
-  source "${_gpg_env}" > /dev/null
+  chmod 600 "${_gpg_agent_info}"
+  source "${_gpg_agent_info}" > /dev/null
 }
 
 # Source GPG agent settings, if applicable.
-if [[ -s "${_gpg_env}" ]]; then
-  source "${_gpg_env}" > /dev/null
+if [[ -s "${_gpg_agent_info}" ]]; then
+  source "${_gpg_agent_info}" > /dev/null
   ps -U "$USER" -o 'command,pid' \
     | grep "${${(@s.:.)GPG_AGENT_INFO}[2]}" \
     | grep -q '^gpg-agent' \
