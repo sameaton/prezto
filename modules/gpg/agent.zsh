@@ -11,7 +11,7 @@ if (( ! $+commands[gpg-agent] )); then
 fi
 
 # Get the SSH support option.
-zstyle -b ':prezto:module:gpg-agent' ssh-support '_gpg_agent_ssh_support' \
+zstyle -b ':prezto:module:gpg:agent' ssh-support '_gpg_agent_ssh_support' \
   || _gpg_agent_ssh_support=''
 
 # Set the default path to the gpg-agent-info file.
