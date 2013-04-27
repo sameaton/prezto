@@ -33,9 +33,10 @@ function _gpg-agent-start {
 # Source GPG agent settings, if applicable.
 if [[ -s "${_gpg_env}" ]]; then
   source "${_gpg_env}" > /dev/null
-  ps -ef | grep "${SSH_AGENT_PID}" | grep -q 'gpg-agent' || {
-    _gpg-agent-start
-  }
+  ps -U "$USER" -o 'command,pid' \
+    | grep "${${(@s.:.)GPG_AGENT_INFO}[2]}" \
+    | grep -q '^gpg-agent' \
+  || _gpg-agent-start
 else
   _gpg-agent-start
 fi
